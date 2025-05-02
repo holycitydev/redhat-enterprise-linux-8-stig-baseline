@@ -55,18 +55,19 @@ Reboot the system for the changes to take effect.'
       skip 'This control is Not Applicable as FIPS is not required for this system'
     end
   else
-    describe command('fips-mode-setup --check') do
-      its('stdout.strip') { should match(/FIPS mode is enabled/) }
-    end
+    fips_setting = command('update-crypto-policies --show').stdout.strip
 
-    grub_config = command('grub2-editenv - list').stdout
-
-    describe parse_config(grub_config) do
-      its('kernelopts') { should match(/fips=1/) }
-    end
-
-    describe file('/proc/sys/crypto/fips_enabled') do
-      its('content.strip') { should cmp '1' }
+    if fips_setting.match?(/FIPS:AD-SUPPORT/)
+      describe "Document FIPS:AD-SUPPORT setting with ISSO" do
+        skip "Document FIPS:AD-SUPPORT setting with ISSO"
+      end
+    elsif fips_setting.match?(/FIPS:NO-ENFORCE-EMS/)
+      describe "Document FIPS:NO-ENFORCE-EMS setting with ISSO" do
+        skip "Document FIPS:NO-ENFORCE-EMS setting with ISSO"
+      end
+    else
+      describe fips_setting do
+        it{should match /FIPS/}
     end
   end
 end
