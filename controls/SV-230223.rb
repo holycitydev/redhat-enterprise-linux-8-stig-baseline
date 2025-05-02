@@ -68,6 +68,7 @@ Reboot the system for the changes to take effect.'
     else
       describe fips_setting do
         it{should match /FIPS/}
+      end
     end
   end
 end
